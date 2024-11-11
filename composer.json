@@ -1,0 +1,13 @@
+{
+    "name": "k4m1l/command-centre",
+    "type": "project",
+    "authors": [
+        {
+            "name": "Kamil Szwaradzki"
+        }
+    ],
+    "require": {},
+    "autoload": {
+        "psr-4": {"Utils\\": "src/utils/"}
+    }
+}

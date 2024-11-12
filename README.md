@@ -1,10 +1,11 @@
 # Centrum Dowodzenia
 ## Do zrobienia
 - Kalendarz
-    - dodanie obecnej daty (podświetlenie)
+    - dodanie tabeli w bazie danych
 - Lista zadań
-    - crud z taskami
+    - dodanie tabeli w bazie danych
 - Finanse
-    - Wpływy/odpływy
+    - dodanie tabeli w bazie danych
 - Hobby
-    - dodanie postępów/opisów ich z np. puzzlami lub rysowaniem/pisaniem/czytaniem
+    - dodanie tabeli w bazie danych
+- Wyświetlanie powiadomienia w formie popup o czymś do zrobienia

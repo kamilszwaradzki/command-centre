@@ -6,8 +6,15 @@
             "name": "Kamil Szwaradzki"
         }
     ],
-    "require": {},
+    "require": {
+        "mongodb/mongodb": "^1.15"
+    },
     "autoload": {
-        "psr-4": {"Utils\\": "src/utils/"}
+        "psr-4": {
+            "Utils\\": "src/utils/",
+            "Business\\": "src/business/",
+            "Hobby\\": "src/hobby/",
+            "Todo\\": "src/todo/"
+        }
     }
 }

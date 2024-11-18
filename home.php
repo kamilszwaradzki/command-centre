@@ -45,7 +45,8 @@
 
     <!-- Główna zawartość -->
     <div class="content">
-        <h1>Centrum Dowodzenia</h1>
+        <div id="todoNotification"></div>
+        <h1 id="headingTitle">Centrum Dowodzenia&nbsp;<button type="button" class="btn btn-primary" id="liveAlertBtn">Pokaż notyfikacje</button></h1>
         <p>Witaj w swoim centrum dowodzenia! Tutaj możesz zarządzać wszystkimi swoimi zasobami i opcjami.</p>
         
         <section id="calendar">
@@ -349,5 +350,26 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+const alertPlaceholder = document.getElementById('todoNotification')
+const appendAlert = (message, type) => {
+  const wrapper = document.createElement('div')
+  wrapper.innerHTML = [
+    `<div class="alert alert-${type} alert-dismissible" role="alert">`,
+    `   <div>${message}</div>`,
+    '   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>',
+    '</div>'
+  ].join('')
+
+  alertPlaceholder.append(wrapper)
+}
+
+const alertTrigger = document.getElementById('liveAlertBtn')
+if (alertTrigger) {
+  alertTrigger.addEventListener('click', () => {
+    appendAlert('<h2>Sprawdzić drukarkę</h2><p><i>Data przewidzianego ukończenia:</i>&nbsp;2024-11-27</p><h4>Opis:</h4><p>Przeczyścić, rozebrać wymienić toner</p><button class="btn btn-link" data-bs-toggle="modal" data-bs-target="#todoModal2">Edytuj</button>', 'success')
+  })
+}
+</script>
 </body>
 </html>

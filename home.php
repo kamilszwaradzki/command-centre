@@ -200,7 +200,7 @@
                 <tbody>
                     <?php
                     $business = new Business\Model();
-                    $business_collection = $business->getAll()->toArray();
+                    $business_collection = $business->getAll(['date_added' => ['$gte' => date('Y-m-01'), '$lte' => date('Y-m-t')]])->toArray();
                     $i = 1;
                     $sum = 0;
                     foreach($business_collection as $business_obj):

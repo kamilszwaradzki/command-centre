@@ -73,6 +73,12 @@ switch ($request) {
     case '/todo':
         require_once __DIR__ . $viewDir . 'todo.php';
         break;
+    case '/todo/api/get':
+        require_once __DIR__ . '/src/todo/Api.php';
+        $controller = new Todo\Api();
+        $controller->getUnfinishedTodo();
+        die();
+        break;
     case '/todo/copy':
         require_once __DIR__ . '/src/todo/Controller.php';
         $controller = new Todo\Controller();

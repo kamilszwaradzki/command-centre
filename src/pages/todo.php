@@ -58,6 +58,7 @@
                     <div id="addTodo" class="accordion-collapse collapse" data-bs-parent="#accordionTodo">
                         <div class="accordion-body">
                             <form action="/todo/add" method="post">
+                                <input type="hidden" name="redirect_to" value="/todo"/>
                                 <div class="mb-3">
                                     <label for="titleId" class="form-label">Tytuł</label>
                                     <input type="text" class="form-control" id="titleId" aria-describedby="titleHelp" name="title">

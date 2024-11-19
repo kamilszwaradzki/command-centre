@@ -18,7 +18,7 @@ class Controller {
             'content' => $_POST['content'],
             'date_added' => date('Y-m-d'),
             'estimated_finish_date' => $_POST['estimated_finish_date'],
-            'date_finish' => '',
+            'date_finish' => $_POST['date_finish'],
             'status' => $_POST['status']
         ];
         $this->model->add($data);

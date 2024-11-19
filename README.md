@@ -1,6 +1,4 @@
 # Centrum Dowodzenia
-## Do zrobienia
-- Wyświetlanie powiadomienia w formie popup o czymś do zrobienia
 
 ## Jak odpalać?
 1. Otworzyć 3 okienka z terminalami w vscode: `server`, `commands` i `mongodb`

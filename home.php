@@ -46,7 +46,7 @@
     <!-- Główna zawartość -->
     <div class="content">
         <div id="todoNotification"></div>
-        <h1 id="headingTitle">Centrum Dowodzenia&nbsp;<button type="button" class="btn btn-primary" id="liveAlertBtn">Pokaż notyfikacje</button></h1>
+        <h1 id="headingTitle">Centrum Dowodzenia</h1>
         <p>Witaj w swoim centrum dowodzenia! Tutaj możesz zarządzać wszystkimi swoimi zasobami i opcjami.</p>
         
         <section id="calendar">
@@ -354,21 +354,28 @@
 const alertPlaceholder = document.getElementById('todoNotification')
 const appendAlert = (message, type) => {
   const wrapper = document.createElement('div')
+  wrapper.className = `alert alert-${type} alert-dismissible`;
+  wrapper.setAttribute('role', 'alert');
   wrapper.innerHTML = [
-    `<div class="alert alert-${type} alert-dismissible" role="alert">`,
     `   <div>${message}</div>`,
-    '   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>',
-    '</div>'
+    '   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>'
   ].join('')
 
   alertPlaceholder.append(wrapper)
 }
 
-const alertTrigger = document.getElementById('liveAlertBtn')
-if (alertTrigger) {
-  alertTrigger.addEventListener('click', () => {
-    appendAlert('<h2>Sprawdzić drukarkę</h2><p><i>Data przewidzianego ukończenia:</i>&nbsp;2024-11-27</p><h4>Opis:</h4><p>Przeczyścić, rozebrać wymienić toner</p><button class="btn btn-link" data-bs-toggle="modal" data-bs-target="#todoModal2">Edytuj</button>', 'success')
-  })
+var now = new Date();
+if(window.localStorage.getItem('notificationTime') < now.getTime()) {
+    window.localStorage.setItem('notificationTime', now.setMinutes(now.getMinutes() + 30));
+    alertPlaceholder.innerHTML = ''
+    fetch(new Request('/todo/api/get'))
+    .then((response) => response.json())
+    .then((response) => {
+        response.forEach((item) => {
+            let modal = '<div class="modal fade" id="todoModal' + item._id.$oid + '" tabindex="-1" aria-labelledby="todoModalLabel' + item._id.$oid + '" aria-hidden="true"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><h1 class="modal-title fs-5" id="todoModalLabel' + item._id.$oid + '">Todo #' + item._id.$oid + '</h1><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div><div class="modal-body"><form action="/todo/edit" method="POST"><input type="hidden" name="redirect_to" value="/"/><input type="hidden" name="id" value="' + item._id.$oid + '" /><div class="mb-3"><label for="titleId" class="form-label">Tytuł</label><input type="text" class="form-control" id="titleId" aria-describedby="titleHelp" name="title" value="' + item.title + '"><div id="titleHelp" class="form-text">Najlepiej krótki i rzeczowy np. pozmywać po obiedzie</div></div><div class="mb-3"><label for="contentId" class="form-label">Treść</label><textarea class="form-control" id="contentId" rows="3" name="content">' + item.content + '</textarea></div><div class="mb-3"><label for="estimatedFinishDateId" class="form-label">Data Przewidzianego Ukończenia</label><div class="row g-3 align-items-center"><div class="col-auto"><input type="date" class="form-control" id="estimatedFinishDateId" name="estimated_finish_date" value="' + item.estimated_finish_date + '"></div></div></div><div class="mb-3"><label for="dateFinishId" class="form-label">Data Ukończenia</label><div class="row g-3 align-items-center"><div class="col-auto"><input type="date" class="form-control" id="dateFinishId" name="date_finish" value="' + item.date_finish + '"></div></div></div><div class="mb-3 form-check"><input type="checkbox" class="form-check-input" id="statusId" name="status" ' + (item.status != null ? 'checked="checked"' : '') + '><label class="form-check-label" for="statusId">Status</label></div><button type="submit" class="btn btn-primary">Edytuj Todo #'+ item._id.$oid +'</button></form></div><div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button></div></div></div></div>';
+            appendAlert('<h2>' + item.title + '</h2><p><i>Data przewidzianego ukończenia:</i>&nbsp;' + item.date_added + '</p><h4>Opis:</h4><p>' + item.content + '</p><button class="btn btn-link" data-bs-toggle="modal" data-bs-target="#todoModal' + item._id.$oid + '">Edytuj</button>' + modal, 'success')
+        });
+    });
 }
 </script>
 </body>

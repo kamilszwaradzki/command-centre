@@ -9,89 +9,123 @@ switch ($request) {
         require_once __DIR__ . '/home.php';
         break;
     case '/business':
-        require_once __DIR__ . $viewDir . 'business.php';
-        break;
     case '/business/add':
-        require_once __DIR__ . '/src/business/Controller.php';
-        $controller = new Business\Controller();
-        $controller->add();
-        header("Location: " . $_POST['redirect_to']);
-        die();
-        break;
     case '/business/copy':
-        require_once __DIR__ . '/src/business/Controller.php';
-        $controller = new Business\Controller();
-        $controller->copy();
-        header("Location: " . $_POST['redirect_to']);
-        die();
-        break;
     case '/business/edit':
-        require_once __DIR__ . '/src/business/Controller.php';
-        $controller = new Business\Controller();
-        $controller->update();
-        header("Location: " . $_POST['redirect_to']);
-        die();
-        break;
     case '/business/delete':
         require_once __DIR__ . '/src/business/Controller.php';
         $controller = new Business\Controller();
-        $controller->delete();
-        header("Location: " . $_POST['redirect_to']);
-        die();
+        if (str_ends_with($request, '/add')) {
+            $controller->add();
+            header("Location: " . $_POST['redirect_to']);
+            die();
+        } else if (str_ends_with($request, '/copy')) {
+            $controller->copy();
+            header("Location: " . $_POST['redirect_to']);
+            die();
+        } else if (str_ends_with($request, '/edit')) {
+            $controller->update();
+            header("Location: " . $_POST['redirect_to']);
+            die();
+        } else if (str_ends_with($request, '/delete')) {
+            $controller->delete();
+            header("Location: " . $_POST['redirect_to']);
+            die();
+        } else {
+            require_once __DIR__ . $viewDir . 'business.php';
+        }
         break;
     case '/hobby':
-        require_once __DIR__ . $viewDir . 'hobby.php';
-        break;
     case '/hobby/copy':
-        require_once __DIR__ . '/src/hobby/Controller.php';
-        $controller = new Hobby\Controller();
-        $controller->copy();
-        header("Location: " . $_POST['redirect_to']);
-        die();
-        break;
     case '/hobby/add':
-        require_once __DIR__ . '/src/hobby/Controller.php';
-        $controller = new Hobby\Controller();
-        $controller->add();
-        header("Location: " . $_POST['redirect_to']);
-        die();
-        break;
     case '/hobby/edit':
-        require_once __DIR__ . '/src/hobby/Controller.php';
-        $controller = new Hobby\Controller();
-        $controller->update();
-        header("Location: " . $_POST['redirect_to']);
-        die();
-        break;
     case '/hobby/delete':
         require_once __DIR__ . '/src/hobby/Controller.php';
         $controller = new Hobby\Controller();
-        $controller->delete();
-        header("Location: " . $_POST['redirect_to']);
-        die();
+        if (str_ends_with($request, '/add')) {
+            $controller->add();
+            header("Location: " . $_POST['redirect_to']);
+            die();
+        } else if (str_ends_with($request, '/copy')) {
+            $controller->copy();
+            header("Location: " . $_POST['redirect_to']);
+            die();
+        } else if (str_ends_with($request, '/edit')) {
+            $controller->update();
+            header("Location: " . $_POST['redirect_to']);
+            die();
+        } else if (str_ends_with($request, '/delete')) {
+            $controller->delete();
+            header("Location: " . $_POST['redirect_to']);
+            die();
+        } else {
+            require_once __DIR__ . $viewDir . 'hobby.php';
+        }
         break;
     case '/todo':
-        require_once __DIR__ . $viewDir . 'todo.php';
-        break;
     case '/todo/api/get':
-        require_once __DIR__ . '/src/todo/Api.php';
-        $controller = new Todo\Api();
-        $controller->getUnfinishedTodo();
-        die();
-        break;
     case '/todo/copy':
-        require_once __DIR__ . '/src/todo/Controller.php';
-        $controller = new Todo\Controller();
-        $controller->copy();
-        header("Location: " . $_POST['redirect_to']);
-        die();
-        break;
     case '/todo/add':
+    case '/todo/edit':
+    case '/todo/delete':
         require_once __DIR__ . '/src/todo/Controller.php';
         $controller = new Todo\Controller();
-        $controller->add();
-        header("Location: " . $_POST['redirect_to']);
-        die();
+        if (str_ends_with($request, '/add')) {
+            $controller->add();
+            header("Location: " . $_POST['redirect_to']);
+            die();
+        } else if (str_ends_with($request, '/copy')) {
+            $controller->copy();
+            header("Location: " . $_POST['redirect_to']);
+            die();
+        } else if (str_ends_with($request, '/edit')) {
+            $controller->update();
+            header("Location: " . $_POST['redirect_to']);
+            die();
+        } else if (str_ends_with($request, '/delete')) {
+            $controller->delete();
+            header("Location: " . $_POST['redirect_to']);
+            die();
+        } else if (str_ends_with($request, '/api/get')) {
+            require_once __DIR__ . '/src/todo/Api.php';
+            $controller = new Todo\Api();
+            $controller->getUnfinishedTodo();
+            die();
+        } else {
+            require_once __DIR__ . $viewDir . 'todo.php';
+        }
+        break;
+    case '/invoice':
+    case '/invoice/print':
+    case '/invoice/copy':
+    case '/invoice/add':
+    case '/invoice/edit':
+    case '/invoice/delete':
+        require_once __DIR__ . '/src/invoice/Controller.php';
+        $controller = new Invoice\Controller();
+        if (str_ends_with($request, '/add')) {
+            $controller->add();
+            header("Location: " . $_POST['redirect_to']);
+            die();
+        } else if (str_ends_with($request, '/copy')) {
+            $controller->copy();
+            header("Location: " . $_POST['redirect_to']);
+            die();
+        } else if (str_ends_with($request, '/edit')) {
+            $controller->update();
+            header("Location: " . $_POST['redirect_to']);
+            die();
+        } else if (str_ends_with($request, '/delete')) {
+            $controller->delete();
+            header("Location: " . $_POST['redirect_to']);
+            die();
+        } else if (str_ends_with($request, '/print')) {
+            $invoice_collection = $controller->print();
+            require_once __DIR__ . $viewDir . 'invoice_view.php';
+            die();
+        } else {
+            require_once __DIR__ . $viewDir . 'invoice.php';
+        }
         break;
     case '/todo/edit':
         require_once __DIR__ . '/src/todo/Controller.php';

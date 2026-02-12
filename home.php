@@ -67,28 +67,43 @@
                     <th scope="col">Niedziela</th>
                 </thead>
                 <tbody>
-                    <tr>
-                    <?php
-                        $i = 1;
-                        $remaining_qty_tds = 1;
-                        $td = "<td>";
-                        $red_td = "<td class='bg-primary text-white'>";
-                        $end_td = "</td>";
-                        foreach($current_month as $dayObj):
-                            if ($dayObj->dayOfWeek != 1 && $remaining_qty_tds != 0) {
-                                echo "$td" . $i++ . $end_td;
-                                for($j = 1; $j < $dayObj->dayOfWeek; $j++) {
-                                    echo $td . $end_td;
-                                }
-                                $remaining_qty_tds = 0;
-                            }
-                    ?>
-                        <?php if ($dayObj->dayOfWeek == 1) { echo "<tr>" . $td . $i++ . $end_td; } ?>
-                        <?php if ($dayObj->day == date('j')): echo $red_td . $dayObj->day . $end_td; else: echo $td . $dayObj->day . $end_td; endif; ?>
-                    <?php if ($dayObj->dayOfWeek == 7) { echo "</tr>"; } ?>
-                    <?php
-                        endforeach;
-                    ?>
+                <?php
+                $dayCounter = 1;
+                foreach($current_month as $dayObj):
+                    if ($dayObj->dayOfWeek == 1) {
+                        echo "<tr><td>{$dayCounter}</td>"; 
+                        $dayCounter++;
+                    }
+
+                    // wypełnianie pustych komórek na początku miesiąca
+                    if ($dayObj->day == 1 && $dayObj->dayOfWeek > 1) {
+                        for($j = 1; $j < $dayObj->dayOfWeek; $j++) {
+                            echo "<td></td>";
+                        }
+                    }
+
+                    // faktyczny dzień
+                    if ($dayObj->day == date('j')) {
+                        echo "<td class='bg-primary text-white'>{$dayObj->day}</td>";
+                    } else {
+                        echo "<td>{$dayObj->day}</td>";
+                    }
+
+                    // koniec tygodnia
+                    if ($dayObj->dayOfWeek == 7) {
+                        echo "</tr>";
+                    }
+                endforeach;
+
+                // domknięcie ostatniego wiersza
+                $lastDay = end($current_month);
+                if ($lastDay->dayOfWeek != 7) {
+                    for ($j = $lastDay->dayOfWeek + 1; $j <= 7; $j++) {
+                        echo "<td></td>";
+                    }
+                    echo "</tr>";
+                }
+                ?>
                 </tbody>
              </table>
         </section>

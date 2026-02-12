@@ -7,14 +7,15 @@
         }
     ],
     "require": {
-        "mongodb/mongodb": "^1.15"
+        "mongodb/mongodb": "^2.1"
     },
     "autoload": {
         "psr-4": {
             "Utils\\": "src/utils/",
             "Business\\": "src/business/",
             "Hobby\\": "src/hobby/",
-            "Todo\\": "src/todo/"
+            "Todo\\": "src/todo/",
+            "Invoice\\": "src/invoice/"
         }
     }
 }

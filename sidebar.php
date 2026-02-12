@@ -5,4 +5,5 @@
         <a href="/todo">Lista zadań</a>
         <a href="/business">Finanse</a>
         <a href="/hobby">Hobby - Postępy</a>
+        <a href="/invoice">Faktury</a>
     </nav>

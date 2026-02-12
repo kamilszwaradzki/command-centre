@@ -65,7 +65,7 @@ class Controller
     public function update(): void
     {
         try {
-            $this->validatePost(['id', 'title', 'content', 'estimated_finish_date', 'date_finish', 'status']);
+            $this->validatePost(['id', 'title', 'content', 'estimated_finish_date']);
 
             $data = $this->prepareData(null);
             unset($data['date_added']); // nie nadpisujemy daty utworzenia

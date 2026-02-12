@@ -39,7 +39,7 @@ class Controller
             $data = json_decode(json_encode($invoice), true);
 
             $this->view
-                ->with(['invoice' => $data])
+                ->with(['invoice_collection' => $data])
                 ->show('invoice_view');   // lub layout('print') jeśli masz szablon do druku
         } catch (Exception $e) {
             // Można pokazać stronę błędu lub przekierować

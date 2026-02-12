@@ -76,7 +76,7 @@
 
                     // wypełnianie pustych komórek na początku miesiąca
                     if ($dayObj->day == 1 && $dayObj->dayOfWeek > 1) {
-                        for($j = 1; $j < $dayObj->dayOfWeek; $j++) {
+                        for($j = 0; $j < $dayObj->dayOfWeek; $j++) {
                             echo "<td></td>";
                         }
                     }

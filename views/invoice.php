@@ -276,7 +276,7 @@
                         <td class="py-3"><?php echo $invoice_obj->date_added; ?></td>
                         <td>
                             <div class="btn-group">
-                                <form action="/invoice/print" method="POST"><input type="hidden" name="id" value="<?php echo $invoice_obj->_id; ?>"/><button type="submit" class="btn btn-warning">Pokaż</button></form>
+                                <form action="/invoice/print" method="GET"><input type="hidden" name="id" value="<?php echo $invoice_obj->_id; ?>"/><button type="submit" class="btn btn-warning">Pokaż</button></form>
                                 <form action="/invoice/copy" method="POST"><input type="hidden" name="redirect_to" value="/invoice"/><input type="hidden" name="id" value="<?php echo $invoice_obj->_id; ?>"/><button type="submit" class="btn btn-warning">Kopiuj</button></form>
                                 <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#invoiceModal<?php echo $i; ?>">Edytuj</button>
                                 <div class="modal fade" id="invoiceModal<?php echo $i; ?>" tabindex="-1" aria-labelledby="invoiceModalLabel<?php echo $i; ?>" aria-hidden="true">

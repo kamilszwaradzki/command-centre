@@ -116,7 +116,7 @@ class Controller
         $amount = floatval(str_replace(',', '.', $input['amount'] ?? '0'));
 
         return [
-            'title'            => trim($input['number'] ?? ''),
+            'title'            => trim($input['title'] ?? ''),
             'category'         => trim($input['category'] ?? ''),
             'amount'           => $amount,
 

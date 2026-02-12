@@ -114,7 +114,7 @@ class Controller
         $input = $source ?? $_POST;
 
         return [
-            'title'            => trim($input['number'] ?? ''),
+            'title'            => trim($input['title'] ?? ''),
             'description'      => trim($input['description'] ?? ''),
             'progress'         => trim($input['progress'] ?? ''),
 

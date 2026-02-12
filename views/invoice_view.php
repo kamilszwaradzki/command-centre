@@ -1,28 +1,28 @@
 <?php
-    $number             = $invoice_collection->number;
-    $seller_name        = $invoice_collection->seller_name;
-    $seller_address     = $invoice_collection->seller_address;
-    $seller_postcode    = $invoice_collection->seller_postcode;
-    $seller_city        = $invoice_collection->seller_city;
-    $seller_country     = $invoice_collection->seller_country;
-    $seller_nipcode     = $invoice_collection->seller_nipcode;
-    $buyer_name         = $invoice_collection->buyer_name;
-    $buyer_address      = $invoice_collection->buyer_address;
-    $buyer_postcode     = $invoice_collection->buyer_postcode;
-    $buyer_city         = $invoice_collection->buyer_city;
-    $buyer_country      = $invoice_collection->buyer_country;
-    $buyer_nipcode      = $invoice_collection->buyer_nipcode;
-    $price              = $invoice_collection->price;
-    $vat_amount         = $invoice_collection->vat_amount;
-    $gross_price        = $invoice_collection->gross_price;
-    $price_spellout_en  = $invoice_collection->price_spellout_en;
-    $price_spellout_pl  = $invoice_collection->price_spellout_pl;
-    $assigned_date      = date_format(date_create($invoice_collection->assigned_date), "d/m/Y");
-    $selled_date        = date_format(date_create($invoice_collection->selled_date), "d/m/Y");
-    $due_date           = date_format(date_create($invoice_collection->due_date), "d/m/Y");
-    $notes              = $invoice_collection->notes;
-    $not_zen_vat        = $invoice_collection->not_zen_vat;
-    $vat_23             = $invoice_collection->vat_23;
+    $number             = $invoice_collection['number'];
+    $seller_name        = $invoice_collection['seller_name'];
+    $seller_address     = $invoice_collection['seller_address'];
+    $seller_postcode    = $invoice_collection['seller_postcode'];
+    $seller_city        = $invoice_collection['seller_city'];
+    $seller_country     = $invoice_collection['seller_country'];
+    $seller_nipcode     = $invoice_collection['seller_nipcode'];
+    $buyer_name         = $invoice_collection['buyer_name'];
+    $buyer_address      = $invoice_collection['buyer_address'];
+    $buyer_postcode     = $invoice_collection['buyer_postcode'];
+    $buyer_city         = $invoice_collection['buyer_city'];
+    $buyer_country      = $invoice_collection['buyer_country'];
+    $buyer_nipcode      = $invoice_collection['buyer_nipcode'];
+    $price              = $invoice_collection['price'];
+    $vat_amount         = $invoice_collection['vat_amount'];
+    $gross_price        = $invoice_collection['gross_price'];
+    $price_spellout_en  = $invoice_collection['price_spellout_en'];
+    $price_spellout_pl  = $invoice_collection['price_spellout_pl'];
+    $assigned_date      = date_format(date_create($invoice_collection['assigned_date']), "d/m/Y");
+    $selled_date        = date_format(date_create($invoice_collection['selled_date']), "d/m/Y");
+    $due_date           = date_format(date_create($invoice_collection['due_date']), "d/m/Y");
+    $notes              = $invoice_collection['notes'];
+    $not_zen_vat        = $invoice_collection['not_zen_vat'];
+    $vat_23             = $invoice_collection['vat_23'];
 ?>
 <html>
   <head>

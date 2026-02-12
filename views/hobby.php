@@ -1,4 +1,3 @@
-<?php require_once __DIR__ . '/../../vendor/autoload.php'; ?>
 <!DOCTYPE html>
 <html lang="pl">
 <head>
@@ -41,7 +40,7 @@
 <body>
 
 <div class="container-fluid">
-    <?php require_once __DIR__ . '/../../sidebar.php'; ?>
+    <?php require_once __DIR__ . '/sidebar.php'; ?>
 
     <!-- Główna zawartość -->
     <div class="content">
@@ -92,7 +91,7 @@
                 </thead>
                 <tbody>
                     <?php
-                    $hobby = new Hobby\Model();
+                    $hobby = new Modules\Hobby\Model();
                     $hobby_collection = $hobby->getAll()->toArray();
                     $i = 1;
                     foreach($hobby_collection as $hobby_obj):

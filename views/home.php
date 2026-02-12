@@ -1,4 +1,3 @@
-<?php include_once 'vendor/autoload.php'; ?>
 <!DOCTYPE html>
 <html lang="pl">
 <head>
@@ -123,7 +122,7 @@
                 </thead>
                 <tbody>
                     <?php
-                    $todo = new Todo\Model();
+                    $todo = new Modules\Todo\Model();
                     $todo_collection = $todo->getAll(['status' => ['$ne' => 'on']])->toArray();
                     $i = 1;
                     foreach($todo_collection as $todo_obj):
@@ -215,7 +214,7 @@
                 </thead>
                 <tbody>
                     <?php
-                    $business = new Business\Model();
+                    $business = new Modules\Business\Model();
                     $business_collection = $business->getAll(['date_added' => ['$gte' => date('Y-m-01'), '$lte' => date('Y-m-t')]])->toArray();
                     $i = 1;
                     $sum = 0;
@@ -292,7 +291,7 @@
                 </thead>
                 <tbody>
                     <?php
-                    $hobby = new Hobby\Model();
+                    $hobby = new Modules\Hobby\Model();
                     $hobby_collection = $hobby->getAll()->toArray();
                     $i = 1;
                     foreach($hobby_collection as $hobby_obj):

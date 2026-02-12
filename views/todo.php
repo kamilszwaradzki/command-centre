@@ -1,4 +1,3 @@
-<?php require_once __DIR__ . '/../../vendor/autoload.php'; ?>
 <!DOCTYPE html>
 <html lang="pl">
 <head>
@@ -41,7 +40,7 @@
 <body>
 
 <div class="container-fluid">
-    <?php require_once __DIR__ . '/../../sidebar.php'; ?>
+    <?php require_once __DIR__ . '/sidebar.php'; ?>
 
     <!-- Główna zawartość -->
     <div class="content">
@@ -107,7 +106,7 @@
                 </thead>
                 <tbody>
                     <?php
-                    $todo = new Todo\Model();
+                    $todo = new Modules\Todo\Model();
                     $todo_collection = $todo->getAll()->toArray();
                     $i = 1;
                     foreach($todo_collection as $todo_obj):

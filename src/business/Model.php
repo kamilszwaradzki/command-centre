@@ -1,6 +1,5 @@
 <?php
-namespace Business;
-require_once __DIR__ . '/../../vendor/autoload.php';
+namespace Modules\Business;
 use Utils\MongoPDO;
 
 class Model {

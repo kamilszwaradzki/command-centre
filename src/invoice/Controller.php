@@ -1,122 +1,179 @@
 <?php
-namespace Invoice;
-require_once __DIR__ . '/../../vendor/autoload.php';
+namespace Modules\Invoice;
 
-class Controller {
+use Core\View;
+use Exception;
 
-    private $model;
+class Controller
+{
+    private View $view;
+    private Model $model;
+
     public function __construct()
     {
+        $this->view = new View();
         $this->model = new Model();
     }
-        // 'en' => NumberFormatter::create('en', NumberFormatter::SPELLOUT)->format($price * 1.23),
-        // 'pl' => NumberFormatter::create('pl', NumberFormatter::SPELLOUT)->format($price * 1.23),
 
-    public function add()
+    public function index(): void
     {
-        $data = [
-            'number' => $_POST['number'],
-            'seller_name' => $_POST['seller_name'],
-            'seller_address' => $_POST['seller_address'],
-            'seller_postcode' => $_POST['seller_postcode'],
-            'seller_city' => $_POST['seller_city'],
-            'seller_country' => $_POST['seller_country'],
-            'seller_nipcode' => $_POST['seller_nipcode'],
-            'buyer_name' => $_POST['buyer_name'],
-            'buyer_address' => $_POST['buyer_address'],
-            'buyer_postcode' => $_POST['buyer_postcode'],
-            'buyer_city' => $_POST['buyer_city'],
-            'buyer_country' => $_POST['buyer_country'],
-            'buyer_nipcode' => $_POST['buyer_nipcode'],
-            'price' => $_POST['price'],
-            'vat_amount' => $_POST['vat_amount'],
-            'gross_price' => $_POST['gross_price'],
-            'price_spellout_en' => \NumberFormatter::create('en', \NumberFormatter::SPELLOUT)->format(floatval(str_replace(",", ".", $_POST['gross_price']))),
-            'price_spellout_pl' => \NumberFormatter::create('pl', \NumberFormatter::SPELLOUT)->format(floatval(str_replace(",", ".", $_POST['gross_price']))),
-            'assigned_date' => $_POST['assigned_date'],
-            'selled_date' => $_POST['selled_date'],
-            'due_date' => $_POST['due_date'],
-            'notes' => $_POST['notes'],
-            'not_zen_vat' => $_POST['not_zen_vat'],
-            'vat_23' => $_POST['vat_23'],
-            'date_added' => date('Y-m-d'),
+        $invoices = $this->model->getAll()->toArray();
+        $this->view
+            ->with(['invoice_collection' => $invoices])
+            ->show('invoice');
+    }
+
+    public function print(): void
+    {
+        try {
+            if (empty($_GET['id'])) {
+                throw new Exception('Brak ID');
+            }
+
+            $invoice = $this->model->getOne(['_id' => $_GET['id']]);
+            if (!$invoice) {
+                throw new Exception('Faktura nie znaleziona');
+            }
+
+            // Konwertujemy BSONDocument → czysta tablica (łatwiej w widoku)
+            $data = json_decode(json_encode($invoice), true);
+
+            $this->view
+                ->with(['invoice' => $data])
+                ->show('invoice_view');   // lub layout('print') jeśli masz szablon do druku
+        } catch (Exception $e) {
+            // Można pokazać stronę błędu lub przekierować
+            http_response_code(404);
+            $this->view->show('error', ['message' => $e->getMessage()]);
+        }
+    }
+
+    public function add(): void
+    {
+        try {
+            $this->validatePost([
+                'number', 'seller_name', 'buyer_name', 'gross_price' // minimalny zestaw – dodaj więcej wg potrzeb
+            ]);
+
+            $data = $this->prepareData();
+            $this->model->add($data);
+
+            $this->redirect('/invoice?success=added');
+        } catch (Exception $e) {
+            // Możesz przekazać błąd do widoku przez sesję lub GET
+            $this->redirect('/invoice/add?error=' . urlencode($e->getMessage()));
+        }
+    }
+
+    public function copy(): void
+    {
+        try {
+            $this->validatePost(['id']);
+
+            $original = $this->model->getOne(['_id' => $_POST['id']]);
+            if (!$original) {
+                throw new Exception('Dokument nie znaleziony');
+            }
+
+            // Kopiujemy, ale resetujemy niektóre pola
+            $data = (array) $original;
+            unset($data['_id']);
+            $data['number']       .= ' (kopia)';
+            $data['date_added']    = date('Y-m-d');
+            $data['date_modified'] = date('Y-m-d');
+            // ewentualnie nowy numer – tu możesz mieć logikę generowania
+
+            $this->model->add($data);
+            $this->redirect('/invoice?success=copied');
+        } catch (Exception $e) {
+            $this->redirect('/invoice?error=' . urlencode($e->getMessage()));
+        }
+    }
+
+    public function update(): void
+    {
+        try {
+            $this->validatePost(['id', 'number', 'gross_price']);
+
+            $data = $this->prepareData();
+            unset($data['date_added']); // nie nadpisujemy daty utworzenia
+
+            $this->model->update(['_id' => $_POST['id']], $data);
+            $this->redirect('/invoice?success=updated');
+        } catch (Exception $e) {
+            $this->redirect('/invoice/edit?id=' . ($_POST['id'] ?? '') . '&error=' . urlencode($e->getMessage()));
+        }
+    }
+
+    public function delete(): void
+    {
+        try {
+            $this->validatePost(['id']);
+            $this->model->delete(['_id' => $_POST['id']]);
+            $this->redirect('/invoice?success=deleted');
+        } catch (Exception $e) {
+            $this->redirect('/invoice?error=' . urlencode($e->getMessage()));
+        }
+    }
+
+    private function redirect(string $to = '/invoice'): never
+    {
+        header("Location: $to");
+        exit;
+    }
+
+    private function validatePost(array $required): void
+    {
+        foreach ($required as $key) {
+            if (!isset($_POST[$key]) || trim($_POST[$key]) === '') {
+                throw new Exception("Brak wymaganego pola: $key");
+            }
+        }
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            throw new Exception("Dozwolone tylko żądania POST");
+        }
+    }
+
+    private function prepareData(array $source = null): array
+    {
+        $input = $source ?? $_POST;
+
+        $gross = floatval(str_replace(',', '.', $input['gross_price'] ?? '0'));
+
+        return [
+            'number'            => trim($input['number'] ?? ''),
+            'seller_name'       => trim($input['seller_name'] ?? ''),
+            'seller_address'    => trim($input['seller_address'] ?? ''),
+            'seller_postcode'   => trim($input['seller_postcode'] ?? ''),
+            'seller_city'       => trim($input['seller_city'] ?? ''),
+            'seller_country'    => trim($input['seller_country'] ?? 'PL'),
+            'seller_nipcode'    => trim($input['seller_nipcode'] ?? ''),
+
+            'buyer_name'        => trim($input['buyer_name'] ?? ''),
+            'buyer_address'     => trim($input['buyer_address'] ?? ''),
+            'buyer_postcode'    => trim($input['buyer_postcode'] ?? ''),
+            'buyer_city'        => trim($input['buyer_city'] ?? ''),
+            'buyer_country'     => trim($input['buyer_country'] ?? 'PL'),
+            'buyer_nipcode'     => trim($input['buyer_nipcode'] ?? ''),
+
+            'price'             => floatval(str_replace(',', '.', $input['price'] ?? '0')),
+            'vat_amount'        => floatval(str_replace(',', '.', $input['vat_amount'] ?? '0')),
+            'gross_price'       => $gross,
+
+            // Kwota słownie – tylko brutto (najczęściej wymagane na fakturach PL)
+            'price_spellout_pl' => \NumberFormatter::create('pl_PL', \NumberFormatter::SPELLOUT)->format($gross),
+            'price_spellout_en' => \NumberFormatter::create('en_US', \NumberFormatter::SPELLOUT)->format($gross),
+
+            'assigned_date'     => $input['assigned_date'] ?? date('Y-m-d'),
+            'selled_date'       => $input['selled_date'] ?? date('Y-m-d'),
+            'due_date'          => $input['due_date'] ?? date('Y-m-d', strtotime('+14 days')),
+
+            'notes'             => trim($input['notes'] ?? ''),
+            'not_zen_vat'       => !empty($input['not_zen_vat']),
+            'vat_23'            => !empty($input['vat_23']),
+
+            'date_added'        => date('Y-m-d'),
+            'date_modified'     => date('Y-m-d'),
         ];
-        $this->model->add($data);
-    }
-
-    public function copy()
-    {
-        $collection = $this->model->getOne(['_id' => $_POST['id']]);
-        $data = [
-            'number' => $collection->number,
-            'seller_name' => $collection->seller_name,
-            'seller_address' => $collection->seller_address,
-            'seller_postcode' => $collection->seller_postcode,
-            'seller_city' => $collection->seller_city,
-            'seller_country' => $collection->seller_country,
-            'seller_nipcode' => $collection->seller_nipcode,
-            'buyer_name' => $collection->buyer_name,
-            'buyer_address' => $collection->buyer_address,
-            'buyer_postcode' => $collection->buyer_postcode,
-            'buyer_city' => $collection->buyer_city,
-            'buyer_country' => $collection->buyer_country,
-            'buyer_nipcode' => $collection->buyer_nipcode,
-            'price' => $collection->price,
-            'vat_amount' => $collection->vat_amount,
-            'gross_price' => $collection->gross_price,
-            'price_spellout_en' => $collection->price_spellout_en,
-            'price_spellout_pl' => $collection->price_spellout_pl,
-            'assigned_date' => $collection->assigned_date,
-            'selled_date' => $collection->selled_date,
-            'due_date' => $collection->due_date,
-            'notes' => $collection->notes,
-            'not_zen_vat' => $collection->not_zen_vat,
-            'vat_23' => $collection->vat_23,
-            'date_added' => date('Y-m-d'),
-        ];
-        $this->model->add($data);
-    }
-
-    public function update()
-    {
-        $data = [
-            'number' => $_POST['number'],
-            'seller_name' => $_POST['seller_name'],
-            'seller_address' => $_POST['seller_address'],
-            'seller_postcode' => $_POST['seller_postcode'],
-            'seller_city' => $_POST['seller_city'],
-            'seller_country' => $_POST['seller_country'],
-            'seller_nipcode' => $_POST['seller_nipcode'],
-            'buyer_name' => $_POST['buyer_name'],
-            'buyer_address' => $_POST['buyer_address'],
-            'buyer_postcode' => $_POST['buyer_postcode'],
-            'buyer_city' => $_POST['buyer_city'],
-            'buyer_country' => $_POST['buyer_country'],
-            'buyer_nipcode' => $_POST['buyer_nipcode'],
-            'price' => $_POST['price'],
-            'vat_amount' => $_POST['vat_amount'],
-            'gross_price' => $_POST['gross_price'],
-            'price_spellout_en' => \NumberFormatter::create('en', \NumberFormatter::SPELLOUT)->format(floatval(str_replace(",", ".", $_POST['gross_price']))),
-            'price_spellout_pl' => \NumberFormatter::create('pl', \NumberFormatter::SPELLOUT)->format(floatval(str_replace(",", ".", $_POST['gross_price']))),
-            'assigned_date' => $_POST['assigned_date'],
-            'selled_date' => $_POST['selled_date'],
-            'due_date' => $_POST['due_date'],
-            'notes' => $_POST['notes'],
-            'not_zen_vat' => $_POST['not_zen_vat'],
-            'vat_23' => $_POST['vat_23'],
-            'date_modified'         => date('Y-m-d'),
-        ];
-        $this->model->update(['_id' => $_POST['id']], $data);
-    }
-
-    public function delete()
-    {
-        $this->model->delete(['_id' => $_POST['id']]);
-    }
-
-    public function print()
-    {
-        $collection = $this->model->getOne(['_id' => $_POST['id']]);
-        return $collection;
     }
 }

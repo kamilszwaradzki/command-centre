@@ -1,5 +1,4 @@
 <?php
-    require_once __DIR__ . '/../../vendor/autoload.php';
     $number             = $invoice_collection->number;
     $seller_name        = $invoice_collection->seller_name;
     $seller_address     = $invoice_collection->seller_address;
@@ -14,7 +13,7 @@
     $buyer_country      = $invoice_collection->buyer_country;
     $buyer_nipcode      = $invoice_collection->buyer_nipcode;
     $price              = $invoice_collection->price;
-    $vat_amount         = $invoice_collection->vat_amount;
+    $vat_amount         = number_format($invoice_collection->vat_amount, 2, ',');
     $gross_price        = $invoice_collection->gross_price;
     $price_spellout_en  = $invoice_collection->price_spellout_en;
     $price_spellout_pl  = $invoice_collection->price_spellout_pl;
@@ -175,7 +174,7 @@
                 <?= $seller_address ?><br/>
                 <?= $seller_postcode ?>&nbsp;<?= $seller_city ?><br/>
                 <?= $seller_country ?></br>
-                <b>VAT code /</b> NIP: <?= $seller_nipcode ?>
+                <?= $seller_nipcode ?>
             </span>
             <span class='empty_grid'></span>
             <span class='buyer'>
@@ -185,7 +184,7 @@
                 <?= $buyer_address ?><br/>
                 <?= $buyer_postcode ?>&nbsp;<?= $buyer_city ?><br/>
                 <?= $buyer_country ?></br>
-                <?php if(!empty($buyer_nipcode)): ?> NIP: <?= $buyer_nipcode ?> <?php endif; ?>
+                <?= $buyer_nipcode ?>
             </span>       
         </div>
         <table>

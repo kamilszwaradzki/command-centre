@@ -1,6 +1,5 @@
 <?php
-namespace Invoice;
-require_once __DIR__ . '/../../vendor/autoload.php';
+namespace Modules\Invoice;
 use Utils\MongoPDO;
 
 class Model {

@@ -1,4 +1,3 @@
-<?php require_once __DIR__ . '/../../vendor/autoload.php'; ?>
 <!DOCTYPE html>
 <html lang="pl">
 <head>
@@ -41,7 +40,7 @@
 <body>
 
 <div class="container-fluid">
-    <?php require_once __DIR__ . '/../../sidebar.php'; ?>
+    <?php require_once __DIR__ . '/sidebar.php'; ?>
 
     <!-- Główna zawartość -->
     <div class="content">
@@ -88,7 +87,7 @@
                 </thead>
                 <tbody>
                     <?php
-                    $business = new Business\Model();
+                    $business = new Modules\Business\Model();
                     $business_collection = $business->getAll()->toArray();
                     $i = 1;
                     $sum = 0;

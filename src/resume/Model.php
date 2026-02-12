@@ -1,5 +1,5 @@
 <?php
-namespace Modules\Todo;
+namespace Modules\Resume;
 use Utils\MongoPDO;
 
 class Model {
@@ -7,7 +7,7 @@ class Model {
 
     public function __construct()
     {
-        $this->phpDataObject = new MongoPDO('my_db', 'todo_collection');
+        $this->phpDataObject = new MongoPDO('my_db', 'resume_collection');
     }
 
     public function getAll($filter = [])

@@ -1,4 +1,3 @@
-<?php require_once __DIR__ . '/../../vendor/autoload.php'; ?>
 <!DOCTYPE html>
 <html lang="pl">
 <head>
@@ -54,7 +53,7 @@
 <body>
 
 <div class="container-fluid">
-    <?php require_once __DIR__ . '/../../sidebar.php'; ?>
+    <?php require_once __DIR__ . '/sidebar.php'; ?>
 
     <!-- Główna zawartość -->
     <div class="content">
@@ -241,7 +240,7 @@
                 </thead>
                 <tbody>
                     <?php
-                    $invoice = new Invoice\Model();
+                    $invoice = new Modules\Invoice\Model();
                     $invoice_collection = $invoice->getAll()->toArray();
                     $i = 1;
                     foreach($invoice_collection as $invoice_obj):

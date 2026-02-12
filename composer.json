@@ -11,11 +11,14 @@
     },
     "autoload": {
         "psr-4": {
-            "Utils\\": "src/utils/",
-            "Business\\": "src/business/",
-            "Hobby\\": "src/hobby/",
-            "Todo\\": "src/todo/",
-            "Invoice\\": "src/invoice/"
+            "Utils\\":              "src/utils/",
+            "Core\\":               "src/core/",
+            "Modules\\Business\\":  "src/business/",
+            "Modules\\Hobby\\":     "src/hobby/",
+            "Modules\\Home\\":     "src/home/",
+            "Modules\\Todo\\":      "src/todo/",
+            "Modules\\Invoice\\":   "src/invoice/",
+            "Modules\\Resume\\":    "src/resume/"
         }
     }
 }

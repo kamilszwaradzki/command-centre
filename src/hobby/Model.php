@@ -1,6 +1,5 @@
 <?php
-namespace Hobby;
-require_once __DIR__ . '/../../vendor/autoload.php';
+namespace Modules\Hobby;
 use Utils\MongoPDO;
 
 class Model {

@@ -1,6 +1,5 @@
 <?php
-namespace Todo;
-require_once __DIR__ . '/../../vendor/autoload.php';
+namespace Modules\Todo;
 
 class Api {
 
